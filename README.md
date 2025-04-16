@@ -1,32 +1,25 @@
-# 🧠 AI-Powered Expense Classifier
+# AI-Powered Expense Classifier
 
-An intelligent API that classifies natural-language expense descriptions into categories like `Transportation`, `Food & Drink`, `Entertainment`, and more — powered by machine learning and FastAPI.
+An intelligent API that classifies natural-language expense descriptions into categories like `Transportation`, `Food & Drink`, `Entertainment`, etc powered by machine learning and FastAPI.
 
 It also supports:
-- 📦 Batch classification
-- 📸 OCR classification from images/receipts
-- 💡 Confidence scoring for each prediction
+- Batch classification
+- OCR classification from images/receipts
+- Confidence scoring for each prediction
 
 ---
 
-## 🚀 Features
+## Features
 
-- 🔤 **Text Classification** — Predicts expense categories from written descriptions.
-- 🖼️ **OCR Support** — Extracts and classifies text from images (e.g. receipts).
-- 🧠 **ML-Powered** — Trained using scikit-learn with `TfidfVectorizer` and `LogisticRegression`.
-- 🔄 **Batch Input** — Classify multiple expenses in a single call.
-- ⚡ **FastAPI Backend** — Modern async API with auto-generated Swagger docs.
-
+- **Text Classification** — Predicts expense categories from written descriptions.
+- **OCR Support** — Extracts and classifies text from images (e.g. receipts).
+- **ML-Powered** — Trained using scikit-learn with `TfidfVectorizer` and `LogisticRegression`.
+- **Batch Input** — Classify multiple expenses in a single call.
+- **FastAPI Backend** — Modern async API with auto-generated Swagger docs.
+  
 ---
 
-## 📂 Project Structure
-
-ai-expense-classifier/ ├── app/ │ ├── api/ # FastAPI routes │ ├── ml/ # Model training │ ├── models/ # Saved model (joblib) │ └── main.py # API entry point ├── data/ # Mock dataset (CSV) ├── tests ├── requirements.txt ├── README.md
-
-
----
-
-## 📦 Setup Instructions
+## Setup Instructions
 
 ### 1. Clone the repo
 
@@ -63,8 +56,10 @@ uvicorn app.main:app --reload
 ```
 
 Visit:
+
 http://localhost:8000
-http://localhost:8000/docs : Swagger UI
+
+http://localhost:8000/docs (Swagger UI)
 
 
 ### Example usage
