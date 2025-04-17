@@ -1,0 +1,12 @@
+# ignore Python virtual environments
+venv/
+
+# ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.vscode/
+
+.DS_Store
