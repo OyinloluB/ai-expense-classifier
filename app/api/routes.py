@@ -7,7 +7,7 @@ defines the API routes for the AI Expense Classifier.
 - /classify/ocr: Image-based OCR classification
 """
 
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, File, UploadFile, HTTPException
 from PIL import Image
 from pydantic import BaseModel
 from typing import List
@@ -18,17 +18,29 @@ import io
 # Schema for single expense input
 class ExpenseInput(BaseModel):
     description: str
+    
+# Schema for batch classification input
+class BatchInput(BaseModel):
+    descriptions: List[str]
+    
+# Create the router
+router = APIRouter()
 
 # Load the trained model once when the app starts
 MODEL_PATH = "app/models/expense_classifier.pkl"
-model = joblib.load(MODEL_PATH)
 
-# Create the router
-router = APIRouter()
+try:
+    model = joblib.load(MODEL_PATH)
+except Exception as e:
+    model = None
+    print(f"[Error] Failed to load model: {e}")
 
 # Classify single expense
 @router.post("/classify")
 def classify_expense(data: ExpenseInput):
+    if model is None:
+        raise HTTPException(status_code=500, detail="Model not loaded.")
+    
     description = data.description
     prediction = model.predict([description])[0]
     confidence = max(model.predict_proba([description])[0])
@@ -39,13 +51,12 @@ def classify_expense(data: ExpenseInput):
         "confidence": round(confidence, 4)
     }
 
-# Schema for batch classification input
-class BatchInput(BaseModel):
-    descriptions: List[str]
-
 # Classify a batch of expense descriptions
 @router.post("/classify/batch")
 def classify_batch(data: BatchInput):
+    if model is None:
+        raise HTTPException(status_code=500, detail="Model not loaded.")
+    
     descriptions = data.descriptions
     predictions = model.predict(descriptions)
     confidences = model.predict_proba(descriptions)
@@ -63,6 +74,12 @@ def classify_batch(data: BatchInput):
 # Classify OCR image/text/category
 @router.post("/classify/ocr")
 async def classify_ocr(file: UploadFile = File(...)):
+    if model is None:
+        raise HTTPException(status_code=500, detail="Model not loaded.")
+
+    if not file.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
+        raise HTTPException(status_code=400, detail="Unsupported file type. Please upload an image file (png, jpg, jpeg).")
+
     try:
         # Read image file
         contents = await file.read()
@@ -82,4 +99,4 @@ async def classify_ocr(file: UploadFile = File(...)):
         }
         
     except Exception as e:
-        return {"error": str(e)}
+        raise HTTPException(status_code=500, detail=f"OCR processing failed: {str(e)}")
