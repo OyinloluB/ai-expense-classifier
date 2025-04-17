@@ -6,7 +6,7 @@ import io
 
 client = TestClient(app)
 
-def test_read_root():
+def test_get_root_success():
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {"message": "AI Expense Classifier is up and running!"}
