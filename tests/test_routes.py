@@ -7,12 +7,14 @@ import io
 client = TestClient(app)
 
 def test_get_root_success():
+    """Should return API welcome message successfully."""
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {"message": "AI Expense Classifier is up and running!"}
 
 # single expense classification
 def test_classify_single_expense():
+    """Should classify a single valid expense description."""
     payload = {"description": "Uber to the airport"}
     response = client.post("/classify", json=payload)
     assert response.status_code == 200
@@ -23,6 +25,7 @@ def test_classify_single_expense():
 
 # batch expense classification
 def test_classify_batch_expenses():
+    """Should classify a batch of valid expense descriptions."""
     payload = {
         "descriptions": [
             "Dinner at Olive Garden",
@@ -44,6 +47,7 @@ def test_classify_batch_expenses():
 
 # OCR receipt upload
 def test_classify_ocr_receipt():
+    """Should classify extracted text from a valid uploaded image."""
     fake_image = io.BytesIO(b"fake image data")
     response = client.post(
         "/classify/ocr",
@@ -58,6 +62,7 @@ def test_classify_ocr_receipt():
 
 # invalid file uploaded to OCR
 def test_classify_ocr_invalid_file():
+    """Should reject unsupported file types during OCR upload."""
     fake_file = io.BytesIO(b"not an image")
     response = client.post(
         "/classify/ocr",
